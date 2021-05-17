@@ -68,26 +68,26 @@ app.post("/compose", function(req, res) {
     content: req.body.postBody
   });
 
-  post.save((err)=> {
+  post.save((err) => {
     if (!err) {
-        res.redirect("/");
+      res.redirect("/");
     }
   });
 });
 
-app.get("/posts/:postName", function(req, res) {
-  const requestedTitle = _.lowerCase(req.params.postName);
+app.get("/posts/:postId", function(req, res) {
+  const requestedPostId = req.params.postId;
 
-  posts.forEach(function(post) {
-    const storedTitle = _.lowerCase(post.title);
-
-    if (storedTitle === requestedTitle) {
-      res.render("post", {
-        title: post.title,
-        content: post.content
-      });
-    }
-  });
+    Post.findOne({
+      _id: requestedPostId
+    }, (err, post) => {
+      if (!err) {
+        res.render("post", {
+          title: post.title,
+          content: post.content
+        });
+      }
+    });
 
 });
 
